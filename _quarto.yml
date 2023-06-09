@@ -1,0 +1,53 @@
+project:
+  type: book
+
+book:
+  title: "Advanced R (2ed): field manual"
+  author: "Martin Frigaard"
+  date: "6/9/2023"
+  chapters:
+    - index.qmd
+    - part: "Foundations"
+      chapters: 
+      - names-values.qmd
+      - vectors.qmd
+      - subsetting.qmd
+      - control-flow.qmd
+      - functions.qmd
+      - environments.qmd
+      - conditions.qmd
+    - part: "Functional programming"
+      chapters: 
+      - functionals.qmd
+      - function-factories.qmd
+      - function-operators.qmd
+    - part: "Object-oriented programming"
+      chapters: 
+      - base-types.qmd
+      - s3.qmd
+      - r6.qmd
+      - s4.qmd
+      - oo-tradeoffs.qmd
+    - part: "Metaprogramming"
+      chapters: 
+      - big-picture.qmd
+      - expressions.qmd
+      - quasiquotation.qmd
+      - evaluation.qmd
+      - translation.qmd
+      - techniques.qmd
+    - part: "Debugging"
+      chapters: 
+      - debugging.qmd
+      - perf-measure.qmd
+      - perf-improve.qmd
+      - rcpp.qmd
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+
+
