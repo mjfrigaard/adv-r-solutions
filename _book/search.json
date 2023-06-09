@@ -5,5 +5,19 @@
     "title": "Advanced R (2ed): field manual",
     "section": "",
     "text": "Another version?\nThis is yet another version of the solutions to Advanced R, 2nd edition (advR2). I’ve returned to advR2 more than any other for my day-to-day activities as an R developer, and after working through each of the exercises, then reading how others had solved them, I decided some of my solutions differed enough to warrant putting them into a book.\nI highly recommend the Advanced R Solutions by Malte Grosser, Henning Bumann, and Hadley Wickham. Indrajeet Patil also has a solutions manual worth reading for alternative approaches."
+  },
+  {
+    "objectID": "names-values.html",
+    "href": "names-values.html",
+    "title": "Names & Values",
+    "section": "",
+    "text": "I’ll need the lobstr package for this chapter.\n\nrenv::install(\"lobstr\")\nlibrary(lobstr)"
+  },
+  {
+    "objectID": "names-values.html#binding-basics",
+    "href": "names-values.html#binding-basics",
+    "title": "Names & Values",
+    "section": "Binding basics",
+    "text": "Binding basics\n\n\n\n\n\n\nQ1\n\n\n\n\n\n1.Explain the relationship between a, b, c and d in the following code:\n\na &lt;- 1:10\nb &lt;- a\nc &lt;- b\nd &lt;- 1:10\n\n\n\n\n\n\n\n\n\n\nA1\n\n\n\n\n\na and d are vectors with the same values, but different memory locations.\n\n\nshow A1\nwaldo::compare(\n  x = lobstr::obj_addr(x = a), \n  y = lobstr::obj_addr(x = b))\n\n\n✔ No differences\n\n\nshow A1\nwaldo::compare(\n  x = lobstr::obj_addr(x = a), \n  y = lobstr::obj_addr(x = c))\n\n\n✔ No differences\n\n\nshow A1\nwaldo::compare(\n  x = lobstr::obj_addr(x = b), \n  y = lobstr::obj_addr(x = c))\n\n\n✔ No differences\n\n\nshow A1\nwaldo::compare(\n  x = lobstr::obj_addr(x = a), \n  y = lobstr::obj_addr(x = d))\n\n\n`old`: \"0x7f8a31160f88\"\n`new`: \"0x7f8a309f9a00\"\n\n\n\n\n\n\n\n\n\n\n\nQ2\n\n\n\n\n\nThe following code accesses the mean function in multiple ways. Do they all point to the same underlying function object? Verify this with lobstr::obj_addr().\n\nmean\nbase::mean\nget(\"mean\")\nevalq(mean)\nmatch.fun(\"mean\")\n\n\n\n\n\n\n\n\n\n\nA2\n\n\n\n\n\nThese are all S3 generic functions from the base package, so they share the same underlying function object.\n\n\ncheck get_info()\nget_info(mean)\n## object: mean\n##  fun type =&gt; S3, generic\n##  class =&gt; function\n##  type =&gt; closure\n##  *mode =&gt; function\nget_info(base::mean)\n## object: base::mean\n##  fun type =&gt; S3, generic\n##  class =&gt; function\n##  type =&gt; closure\n##  *mode =&gt; function\nget_info(get(\"mean\"))\n## object: get(\"mean\")\n##  fun type =&gt; S3, generic\n##  class =&gt; function\n##  type =&gt; closure\n##  *mode =&gt; function\nget_info(evalq(mean))\n## object: evalq(mean)\n##  fun type =&gt; S3, generic\n##  class =&gt; function\n##  type =&gt; closure\n##  *mode =&gt; function\nget_info(match.fun(\"mean\"))\n## object: match.fun(\"mean\")\n##  fun type =&gt; S3, generic\n##  class =&gt; function\n##  type =&gt; closure\n##  *mode =&gt; function\n\n\n\n\nshow code\nlobstr::obj_addr(\n  c(\n    mean,\n    base::mean,\n    get(\"mean\"),\n    evalq(mean),\n    match.fun(\"mean\")\n    )\n  )\n\n\n[1] \"0x7f8a33c30fd8\""
   }
 ]

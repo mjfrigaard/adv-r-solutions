@@ -46,6 +46,15 @@ book:
 format:
   html:
     theme: cosmo
+    callout-appearance: minimal
+    callout-icon: false
+    code-fold: show
+    code-summary: 'show code'
+  
+execute:
+  echo: true
+  collapse: true
+    
   pdf:
     documentclass: scrreprt
 

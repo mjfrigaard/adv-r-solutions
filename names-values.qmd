@@ -1,2 +1,121 @@
 # Names & Values {.unnumbered}
 
+I'll need the [`lobstr` package](https://lobstr.r-lib.org/index.html) for this chapter. 
+
+```{r}
+#| eval: true 
+#| echo: false
+source("common.R")
+```
+
+
+```{r}
+#| eval: true 
+#| message: false 
+#| warning: false 
+#| results: hide
+renv::install("lobstr")
+renv::install("waldo")
+renv::install("purrr")
+library(lobstr)
+library(waldo)
+library(purrr)
+```
+
+## Binding basics
+
+
+
+::: {.callout-note collapse="false"}
+#### Q1
+
+1.Explain the relationship between `a`, `b`, `c` and `d` in the following code:
+
+```{r}
+#| code-fold: false
+a <- 1:10
+b <- a
+c <- b
+d <- 1:10
+```
+
+
+:::
+
+
+::: {.callout-tip collapse="true"}
+#### A1
+
+`a` and `d` are vectors with the same values, but different memory locations.
+
+```{r}
+#| code-fold: show 
+#| code-summary: 'show A1'
+waldo::compare(
+  x = lobstr::obj_addr(x = a), 
+  y = lobstr::obj_addr(x = b))
+
+waldo::compare(
+  x = lobstr::obj_addr(x = a), 
+  y = lobstr::obj_addr(x = c))
+
+waldo::compare(
+  x = lobstr::obj_addr(x = b), 
+  y = lobstr::obj_addr(x = c))
+
+waldo::compare(
+  x = lobstr::obj_addr(x = a), 
+  y = lobstr::obj_addr(x = d))
+```
+
+:::
+
+::: {.callout-note collapse="false"}
+#### Q2
+
+The following code accesses the mean function in multiple ways. Do they all point to the same underlying function object? Verify this with `lobstr::obj_addr()`.
+
+```{r}
+#| code-fold: false 
+#| eval: false
+mean
+base::mean
+get("mean")
+evalq(mean)
+match.fun("mean")
+```
+
+
+:::
+
+::: {.callout-tip collapse="true"}
+#### A2
+
+These are all S3 generic functions from the base package, so they share the same underlying function object.
+
+```{r}
+#| collapse: true 
+#| code-fold: true 
+#| code-summary: 'check get_info()'
+get_info(mean)
+get_info(base::mean)
+get_info(get("mean"))
+get_info(evalq(mean))
+get_info(match.fun("mean"))
+```
+
+
+```{r}
+lobstr::obj_addr(
+  c(
+    mean,
+    base::mean,
+    get("mean"),
+    evalq(mean),
+    match.fun("mean")
+    )
+  )
+```
+
+
+:::
