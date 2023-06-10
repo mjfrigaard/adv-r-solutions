@@ -1,5 +1,64 @@
-# Another version? {.unnumbered}
+# Why? {.unnumbered}
 
-This is yet another version of the solutions to [Advanced R, 2nd edition](https://adv-r.hadley.nz/) (`advR2`). I've returned to `advR2` more than any other for my day-to-day activities as an R developer, and after working through each of the exercises, then reading how others had  solved them, I decided some of my solutions differed enough to warrant putting them into a book. 
+```{r}
+#| label: common.R
+#| eval: true 
+#| echo: false
+source("common.R")
+```
 
-I highly recommend the [Advanced R Solutions](https://advanced-r-solutions.rbind.io/) by Malte Grosser, Henning Bumann, and Hadley Wickham. Indrajeet Patil also has a [solutions manual](https://bookdown.org/IndrajeetPatil/Advanced-R-exercises/) worth reading for alternative approaches.  
+This is yet *another* version of the solutions to [Advanced R, 2nd edition](https://adv-r.hadley.nz/) (`advR2`). I've returned to `advR2` more than any other for my day-to-day activities as an R developer. After working through each of the exercises, then reading how others had solved them, I decided some the approaches I took to solving the exercises differed enough to warrant putting them into a book. 
+
+I highly recommend the [Advanced R Solutions](https://advanced-r-solutions.rbind.io/) by Malte Grosser, Henning Bumann, and Hadley Wickham. I'll refer to these solutions in the following callout box:
+
+::: {.callout-caution collapse="true"}
+
+#### Answer: advRs 2021
+
+:::
+
+Indrajeet Patil also has a [solutions manual](https://bookdown.org/IndrajeetPatil/Advanced-R-exercises/) worth reading for alternative approaches. I'll refer to these solutions in the following callout box
+
+:::: {.callout-warning collapse="true"}
+
+#### Answer: advRs 2022
+
+:::
+
+## Helper functions
+
+While reading `advR2`, I decided to write a few helper functions for returning various characteristics of R objects: 
+
+1. `obj_info()` combines base functions for `class()`, `typeof()`, `attributes()` along with functions from `lobstr` and `sloop`.
+
+-   `obj_info()` works with functions and function outputs:
+
+    ```{r}
+    #| code-fold: true
+    obj_info(x = Sys.time())
+    obj_info(x = Sys.time)
+    ```
+
+-   `obj_info()` and replacement, assignment, arithmetic, and matching operators:
+
+    ```{r}
+    #| code-fold: true
+    obj_info(x = `[`)
+    obj_info(x = `<-`)
+    obj_info(x = `-`)
+    obj_info(x = `%in%`)
+    ```
+
+-   `obj_info()` and vectors:
+
+    ```{r}
+    #| code-fold: true
+    obj_info(1:10)
+    obj_info(mtcars$mpg)
+    x <- factor(x = LETTERS[1:3], 
+             levels = LETTERS[1:3], 
+             labels = LETTERS[1:3])
+    obj_info(x = x)
+    ```
+
+

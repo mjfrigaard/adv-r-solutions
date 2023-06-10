@@ -1,35 +1,41 @@
 # Names & Values {.unnumbered}
 
-I'll need the [`lobstr` package](https://lobstr.r-lib.org/index.html) for this chapter. 
-
 ```{r}
+#| label: common.R
 #| eval: true 
 #| echo: false
 source("common.R")
 ```
 
+I'll load the [`lobstr`](https://lobstr.r-lib.org/index.html), [`waldo`](https://www.tidyverse.org/blog/2020/10/waldo/), and [`purrr`](https://purrr.tidyverse.org/) packages for this chapter.
 
 ```{r}
 #| eval: true 
+#| code-fold: show
+#| code-summary: 'install packages'
 #| message: false 
 #| warning: false 
 #| results: hide
 renv::install("lobstr")
 renv::install("waldo")
 renv::install("purrr")
+renv::install("sloop")
 library(lobstr)
 library(waldo)
 library(purrr)
+library(sloop)
 ```
 
-## Binding basics
+# Exercises: Binding basics
 
+## Q:1
 
+:::: {.callout-note collapse="false"}
+#### Q:1
 
-::: {.callout-note collapse="false"}
-#### Q1
-
-1.Explain the relationship between `a`, `b`, `c` and `d` in the following code:
+::: {style='font-size: 1.10em;'}
+***Explain the relationship between `a`, `b`, `c` and `d` in the following code:***
+:::
 
 ```{r}
 #| code-fold: false
@@ -40,16 +46,18 @@ d <- 1:10
 ```
 
 
+::::
+
+
+:::: {.callout-tip collapse="false"}
+#### A:1
+
+::: {style='font-size: 1.10em;'}
+`a` and `d` are vectors with the same values, but different memory locations. I use `waldo::compare()` because it has prettier printing for differences:
 :::
 
-
-::: {.callout-tip collapse="true"}
-#### A1
-
-`a` and `d` are vectors with the same values, but different memory locations.
-
 ```{r}
-#| code-fold: show 
+#| code-fold: true 
 #| code-summary: 'show A1'
 waldo::compare(
   x = lobstr::obj_addr(x = a), 
@@ -68,12 +76,18 @@ waldo::compare(
   y = lobstr::obj_addr(x = d))
 ```
 
+::::
+
+## Q:2 
+
+
+
+:::: {.callout-note collapse="false"}
+#### Q:2
+
+::: {style='font-size: 1.10em;'}
+***The following code accesses the mean function in multiple ways. Do they all point to the same underlying function object? Verify this with `lobstr::obj_addr()`.***
 :::
-
-::: {.callout-note collapse="false"}
-#### Q2
-
-The following code accesses the mean function in multiple ways. Do they all point to the same underlying function object? Verify this with `lobstr::obj_addr()`.
 
 ```{r}
 #| code-fold: false 
@@ -86,36 +100,110 @@ match.fun("mean")
 ```
 
 
-:::
+::::
 
-::: {.callout-tip collapse="true"}
+:::: {.callout-tip collapse="false"}
 #### A2
 
-These are all S3 generic functions from the base package, so they share the same underlying function object.
+::: {style='font-size: 1.10em;'}
+I used my `get_info()` function to verify these are all S3 generic functions from the `base` package, so they all share the same underlying function object.
+:::
 
 ```{r}
-#| collapse: true 
 #| code-fold: true 
-#| code-summary: 'check get_info()'
-get_info(mean)
-get_info(base::mean)
-get_info(get("mean"))
-get_info(evalq(mean))
-get_info(match.fun("mean"))
+#| code-summary: 'check with get_info()'
+obj_info(mean)
+obj_info(base::mean)
+obj_info(get("mean"))
+obj_info(evalq(mean))
+obj_info(match.fun("mean"))
 ```
-
-
-```{r}
-lobstr::obj_addr(
-  c(
-    mean,
-    base::mean,
-    get("mean"),
-    evalq(mean),
-    match.fun("mean")
-    )
-  )
-```
-
 
 :::
+
+Both solutions manuals solve this problem the same way (with `list()` and `unique()`):
+
+:::: {.callout-warning collapse='true'}
+
+#### Answer advRs 2021:
+
+::: {style='font-size: 1.10em;'}
+*Yes, they point to the same object. We confirm this by inspecting the address of the underlying function object.*
+:::
+
+```{r}
+mean_functions <- list(
+  mean,
+  base::mean,
+  get("mean"),
+  evalq(mean),
+  match.fun("mean")
+)
+
+unique(obj_addrs(mean_functions))
+```
+
+::::
+
+
+
+:::: {.callout-caution collapse='true'}
+
+#### Answer advRs 2022 A:2
+
+::: {style='font-size: 1.10em;'}
+*All listed function calls point to the same underlying function object in memory, as shown by this object’s memory address:*
+:::
+
+```{r}
+obj_addrs <- obj_addrs(list(
+  mean,
+  base::mean,
+  get("mean"),
+  evalq(mean),
+  match.fun("mean")
+))
+
+unique(obj_addrs)
+```
+
+::::
+
+
+:::: {.callout-note collapse="false"}
+
+#### Q3
+
+::: {style='font-size: 1.10em;'}
+
+***By default, base R data import functions, like `read.csv()`, will automatically convert non-syntactic names to syntactic ones. Why might this be problematic? What option allows you to suppress this behaviour?***
+
+:::
+
+::::
+
+
+:::: {.callout-note collapse="false"}
+
+#### Q4
+
+::: {style='font-size: 1.10em;'}
+
+***What rules does `make.names()` use to convert non-syntactic names into syntactic ones?***
+
+:::
+
+::::
+
+:::: {.callout-note collapse="false"}
+
+#### Q5
+
+::: {style='font-size: 1.10em;'}
+
+***I slightly simplified the rules that govern syntactic names. Why is `.123e1` not a syntactic name? Read `?make.names` for the full details.***
+
+:::
+
+
+::::

@@ -2,22 +2,78 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Advanced R (2ed): field manual",
+    "title": "Advanced R (2ed): solutions manual",
     "section": "",
-    "text": "Another version?\nThis is yet another version of the solutions to Advanced R, 2nd edition (advR2). I’ve returned to advR2 more than any other for my day-to-day activities as an R developer, and after working through each of the exercises, then reading how others had solved them, I decided some of my solutions differed enough to warrant putting them into a book.\nI highly recommend the Advanced R Solutions by Malte Grosser, Henning Bumann, and Hadley Wickham. Indrajeet Patil also has a solutions manual worth reading for alternative approaches."
+    "text": "Why?\nThis is yet another version of the solutions to Advanced R, 2nd edition (advR2). I’ve returned to advR2 more than any other for my day-to-day activities as an R developer. After working through each of the exercises, then reading how others had solved them, I decided some the approaches I took to solving the exercises differed enough to warrant putting them into a book.\nI highly recommend the Advanced R Solutions by Malte Grosser, Henning Bumann, and Hadley Wickham. I’ll refer to these solutions in the following callout box:\nIndrajeet Patil also has a solutions manual worth reading for alternative approaches. I’ll refer to these solutions in the following callout box"
+  },
+  {
+    "objectID": "index.html#helper-functions",
+    "href": "index.html#helper-functions",
+    "title": "Advanced R (2ed): solutions manual",
+    "section": "Helper functions",
+    "text": "Helper functions\nWhile reading advR2, I decided to write a few helper functions for returning various characteristics of R objects:\n\nobj_info() combines base functions for class(), typeof(), attributes() along with functions from lobstr and sloop.\n\n\nobj_info() works with functions and function outputs:\n\n\nshow\nobj_info(x = Sys.time())\n# OBJECT: [Sys.time()] \n# class/type: POSIXct/POSIXt/double\n# attr name: class\n# attr values: POSIXct, POSIXt\n# address: 0x7faded5664c0\n# function type: not a function\nobj_info(x = Sys.time)\n# OBJECT: [Sys.time] \n# class/type: function/closure\n# No attributes\n# address: 0x7fade5f1a4d8\n# function type: internal\n\n\nobj_info() and replacement, assignment, arithmetic, and matching operators:\n\n\nshow\nobj_info(x = `[`)\n# OBJECT: [[] \n# class/type: function/special\n# No attributes\n# address: 0x7fade58152f0\n# function type: primitive, generic\nobj_info(x = `&lt;-`)\n# OBJECT: [&lt;-] \n# class/type: function/special\n# No attributes\n# address: 0x7fade580a008\n# function type: primitive\nobj_info(x = `-`)\n# OBJECT: [-] \n# class/type: function/builtin\n# No attributes\n# address: 0x7fade58172b8\n# function type: primitive, generic\nobj_info(x = `%in%`)\n# OBJECT: [%in%] \n# class/type: function/closure\n# No attributes\n# address: 0x7fade6828ee0\n# function type: function\n\n\nobj_info() and vectors:\n\n\nshow\nobj_info(1:10)\n# OBJECT: [1:10] \n# class/type: integer\n# No attributes\n# address: 0x7fadea5adc78\n# function type: not a function\nobj_info(mtcars$mpg)\n# OBJECT: [mtcars$mpg] \n# class/type: numeric/double\n# No attributes\n# address: 0x7fade67b5cf0\n# function type: not a function\nx &lt;- factor(x = LETTERS[1:3], \n         levels = LETTERS[1:3], \n         labels = LETTERS[1:3])\nobj_info(x = x)\n# OBJECT: [x] \n# class/type: factor/integer\n# attr name: levels, class\n# attr values: A, B, C, factor\n# address: 0x7faded074ec8\n# function type: not a function"
   },
   {
     "objectID": "names-values.html",
     "href": "names-values.html",
     "title": "Names & Values",
     "section": "",
-    "text": "I’ll need the lobstr package for this chapter.\n\nrenv::install(\"lobstr\")\nlibrary(lobstr)"
+    "text": "Exercises: Binding basics"
   },
   {
-    "objectID": "names-values.html#binding-basics",
-    "href": "names-values.html#binding-basics",
+    "objectID": "names-values.html#q1",
+    "href": "names-values.html#q1",
     "title": "Names & Values",
-    "section": "Binding basics",
-    "text": "Binding basics\n\n\n\n\n\n\nQ1\n\n\n\n\n\n1.Explain the relationship between a, b, c and d in the following code:\n\na &lt;- 1:10\nb &lt;- a\nc &lt;- b\nd &lt;- 1:10\n\n\n\n\n\n\n\n\n\n\nA1\n\n\n\n\n\na and d are vectors with the same values, but different memory locations.\n\n\nshow A1\nwaldo::compare(\n  x = lobstr::obj_addr(x = a), \n  y = lobstr::obj_addr(x = b))\n\n\n✔ No differences\n\n\nshow A1\nwaldo::compare(\n  x = lobstr::obj_addr(x = a), \n  y = lobstr::obj_addr(x = c))\n\n\n✔ No differences\n\n\nshow A1\nwaldo::compare(\n  x = lobstr::obj_addr(x = b), \n  y = lobstr::obj_addr(x = c))\n\n\n✔ No differences\n\n\nshow A1\nwaldo::compare(\n  x = lobstr::obj_addr(x = a), \n  y = lobstr::obj_addr(x = d))\n\n\n`old`: \"0x7f8a31160f88\"\n`new`: \"0x7f8a309f9a00\"\n\n\n\n\n\n\n\n\n\n\n\nQ2\n\n\n\n\n\nThe following code accesses the mean function in multiple ways. Do they all point to the same underlying function object? Verify this with lobstr::obj_addr().\n\nmean\nbase::mean\nget(\"mean\")\nevalq(mean)\nmatch.fun(\"mean\")\n\n\n\n\n\n\n\n\n\n\nA2\n\n\n\n\n\nThese are all S3 generic functions from the base package, so they share the same underlying function object.\n\n\ncheck get_info()\nget_info(mean)\n## object: mean\n##  fun type =&gt; S3, generic\n##  class =&gt; function\n##  type =&gt; closure\n##  *mode =&gt; function\nget_info(base::mean)\n## object: base::mean\n##  fun type =&gt; S3, generic\n##  class =&gt; function\n##  type =&gt; closure\n##  *mode =&gt; function\nget_info(get(\"mean\"))\n## object: get(\"mean\")\n##  fun type =&gt; S3, generic\n##  class =&gt; function\n##  type =&gt; closure\n##  *mode =&gt; function\nget_info(evalq(mean))\n## object: evalq(mean)\n##  fun type =&gt; S3, generic\n##  class =&gt; function\n##  type =&gt; closure\n##  *mode =&gt; function\nget_info(match.fun(\"mean\"))\n## object: match.fun(\"mean\")\n##  fun type =&gt; S3, generic\n##  class =&gt; function\n##  type =&gt; closure\n##  *mode =&gt; function\n\n\n\n\nshow code\nlobstr::obj_addr(\n  c(\n    mean,\n    base::mean,\n    get(\"mean\"),\n    evalq(mean),\n    match.fun(\"mean\")\n    )\n  )\n\n\n[1] \"0x7f8a33c30fd8\""
+    "section": "Q:1",
+    "text": "Q:1\n\n\n\n\n\n\nQ:1\n\n\n\n\n\n\nExplain the relationship between a, b, c and d in the following code:\n\n\na &lt;- 1:10\nb &lt;- a\nc &lt;- b\nd &lt;- 1:10\n\n\n\n\n\n\n\n\n\n\nA:1\n\n\n\n\n\n\na and d are vectors with the same values, but different memory locations. I use waldo::compare() because it has prettier printing for differences:\n\n\n\nshow A1\nwaldo::compare(\n  x = lobstr::obj_addr(x = a), \n  y = lobstr::obj_addr(x = b))\n# ✔ No differences\n\nwaldo::compare(\n  x = lobstr::obj_addr(x = a), \n  y = lobstr::obj_addr(x = c))\n# ✔ No differences\n\nwaldo::compare(\n  x = lobstr::obj_addr(x = b), \n  y = lobstr::obj_addr(x = c))\n# ✔ No differences\n\nwaldo::compare(\n  x = lobstr::obj_addr(x = a), \n  y = lobstr::obj_addr(x = d))\n# `old`: \"0x7f95e26df210\"\n# `new`: \"0x7f95fde39ab0\""
+  },
+  {
+    "objectID": "names-values.html#q2",
+    "href": "names-values.html#q2",
+    "title": "Names & Values",
+    "section": "Q:2",
+    "text": "Q:2\n\n\n\n\n\n\nQ:2\n\n\n\n\n\n\nThe following code accesses the mean function in multiple ways. Do they all point to the same underlying function object? Verify this with lobstr::obj_addr().\n\n\nmean\nbase::mean\nget(\"mean\")\nevalq(mean)\nmatch.fun(\"mean\")\n\n\n\n\n\n\n\n\n\n\nA2\n\n\n\n\n\n\nI used my get_info() function to verify these are all S3 generic functions from the base package, so they all share the same underlying function object.\n\n\n\ncheck with get_info()\nobj_info(mean)\n# OBJECT: [mean] \n# class/type: function/closure\n# No attributes\n# address: 0x7f95f54a8280\n# function type: S3, generic\nobj_info(base::mean)\n# OBJECT: [base::mean] \n# class/type: function/closure\n# No attributes\n# address: 0x7f95f54a8280\n# function type: S3, generic\nobj_info(get(\"mean\"))\n# OBJECT: [get(\"mean\")] \n# class/type: function/closure\n# No attributes\n# address: 0x7f95f54a8280\n# function type: S3, generic\nobj_info(evalq(mean))\n# OBJECT: [evalq(mean)] \n# class/type: function/closure\n# No attributes\n# address: 0x7f95f54a8280\n# function type: S3, generic\nobj_info(match.fun(\"mean\"))\n# OBJECT: [match.fun(\"mean\")] \n# class/type: function/closure\n# No attributes\n# address: 0x7f95f54a8280\n# function type: S3, generic\n\n\n\n\n\nBoth solutions manuals solve this problem the same way (with list() and unique()):\n\n\n\n\n\n\nAnswer advRs 2021:\n\n\n\n\n\n\nYes, they point to the same object. We confirm this by inspecting the address of the underlying function object.\n\n\n\nshow\nmean_functions &lt;- list(\n  mean,\n  base::mean,\n  get(\"mean\"),\n  evalq(mean),\n  match.fun(\"mean\")\n)\n\nunique(obj_addrs(mean_functions))\n# [1] \"0x7f95f54a8280\"\n\n\n\n\n\n\n\n\n\n\n\nAnswer advRs 2022 A:2\n\n\n\n\n\n\nAll listed function calls point to the same underlying function object in memory, as shown by this object’s memory address:\n\n\n\nshow\nobj_addrs &lt;- obj_addrs(list(\n  mean,\n  base::mean,\n  get(\"mean\"),\n  evalq(mean),\n  match.fun(\"mean\")\n))\n\nunique(obj_addrs)\n# [1] \"0x7f95f54a8280\"\n\n\n\n\n\n\n\n\n\n\n\nQ3\n\n\n\n\n\n\nBy default, base R data import functions, like read.csv(), will automatically convert non-syntactic names to syntactic ones. Why might this be problematic? What option allows you to suppress this behaviour?\n\n\n\n\n\n\n\n\n\n\nQ4\n\n\n\n\n\n\nWhat rules does make.names() use to convert non-syntactic names into syntactic ones?\n\n\n\n\n\n\n\n\n\n\nQ5\n\n\n\n\n\n\nI slightly simplified the rules that govern syntactic names. Why is .123e1 not a syntactic name? Read ?make.names for the full details."
+  },
+  {
+    "objectID": "control-flow.html",
+    "href": "control-flow.html",
+    "title": "Control flow",
+    "section": "",
+    "text": "Choices"
+  },
+  {
+    "objectID": "control-flow.html#q1",
+    "href": "control-flow.html#q1",
+    "title": "Control flow",
+    "section": "Q1",
+    "text": "Q1\n\n\n\n\n\n\nQ:1\n\n\n\n\n\n\nWhat type of vector does each of the following calls to ifelse() return?\n\n\nifelse(TRUE, 1, \"no\")\n# [1] 1\nifelse(FALSE, 1, \"no\")\n# [1] \"no\"\nifelse(NA, 1, \"no\")\n# [1] NA\n\n\n\n\n\n\n\n\n\n\nA1\n\n\n\n\n\n\nifelse() is strict when it comes to the type (or mode) in the results of tests, because it returns a “value with the same shape as test”\n\n\n\nshow\nifelse(test = TRUE, yes = 1, no = \"no\")\n# [1] 1\nmode(TRUE)\n# [1] \"logical\"\n\n\nThis is essentially saying the test result is FALSE, so it evaluates to ‘no’\n\n\nshow\n# the 'shape' of the test here is FALSE, so 'no' is returned \nifelse(FALSE, 1, \"no\")\n# [1] \"no\"\n\n\nI can confirm this with isFALSE(FALSE):\n\n\nshow\n# no = return values for false elements of test\nifelse(test = isFALSE(FALSE), yes = 1, no = \"no\")\n# [1] 1\n\n\n“Missing values in test give missing values in the result.”\n\n\nshow\n# the 'shape' of this test is missing, so it returns missing\nifelse(test = NA, 1, \"no\")\n# [1] NA\n# but this will work!\nifelse(test = is.na(NA), 1, \"no\")\n# [1] 1"
+  },
+  {
+    "objectID": "control-flow.html#q2",
+    "href": "control-flow.html#q2",
+    "title": "Control flow",
+    "section": "Q2",
+    "text": "Q2\n\n\n\n\n\n\nQ:2\n\n\n\n\n\n\nWhy does the following code work?\n\n\nx &lt;- 1:10\nif (length(x)) \"not empty\" else \"empty\"\n\nx &lt;- numeric()\nif (length(x)) \"not empty\" else \"empty\"\n\n\n\n\n\n\n\n\n\n\nA2\n\n\n\n\n\n\nI’ve rewritten this to make the conditions a little easier to see\n\nx &lt;- 1:10\nif (length(x)) {\n  \"not empty\" \n  } else {\n  \"empty\" \n  }\n# [1] \"not empty\"\n\n\nx &lt;- numeric()\nif (length(x)) {\n  \"not empty\" \n  } else {\n  \"empty\"\n  }\n# [1] \"empty\"\n\nThe answer can be found by passing both statements to length(x) == 0, because at bottom, this is what logical statements contain: \n\n\nshow\nsum(TRUE)\n# [1] 1\nsum(FALSE)\n# [1] 0\n\n\n\n\nshow\nx &lt;- 1:10\nlength(x) == 0\n# [1] FALSE\n\n\n\n\nshow\nx &lt;- numeric()\nlength(x) == 0\n# [1] TRUE\n\n\nSo if the length of an empty numeric vector equals 0, it’s not empty"
+  },
+  {
+    "objectID": "control-flow.html#q1-2",
+    "href": "control-flow.html#q1-2",
+    "title": "Control flow",
+    "section": "Q1",
+    "text": "Q1\n\n\n\n\n\n\nQ:1\n\n\n\n\n\n\nWhy does this code succeed without errors or warnings?\n\nx &lt;- numeric()\nout &lt;- vector(\"list\", length(x))\nfor (i in 1:length(x)) {\n  out[i] &lt;- x[i]^2\n}\nout\n# [[1]]\n# [1] NA"
+  },
+  {
+    "objectID": "control-flow.html#q2-2",
+    "href": "control-flow.html#q2-2",
+    "title": "Control flow",
+    "section": "Q2",
+    "text": "Q2\n\n\n\n\n\n\nQ:2\n\n\n\n\n\n\nWhen the following code is evaluated, what can you say about the vector being iterated?\n\nxs &lt;- c(1, 2, 3)\nfor (x in xs) {\n  xs &lt;- c(xs, x * 2)\n}\nxs\n# [1] 1 2 3 2 4 6"
+  },
+  {
+    "objectID": "control-flow.html#q3",
+    "href": "control-flow.html#q3",
+    "title": "Control flow",
+    "section": "Q3",
+    "text": "Q3\n\n\n\n\n\n\nQ:3\n\n\n\n\n\n\nWhat does the following code tell you about when the index is updated?"
   }
 ]

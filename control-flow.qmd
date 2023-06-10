@@ -1,1 +1,231 @@
 # Control flow {.unnumbered}
+
+```{r}
+#| label: common.R
+#| eval: true 
+#| echo: false
+source("common.R")
+```
+
+I'll load the [`lobstr`](https://lobstr.r-lib.org/index.html), [`waldo`](https://www.tidyverse.org/blog/2020/10/waldo/), and [`purrr`](https://purrr.tidyverse.org/) packages for this chapter.
+
+```{r}
+#| eval: true 
+#| code-fold: show
+#| code-summary: 'install packages'
+#| message: false 
+#| warning: false 
+#| results: hide
+renv::install("lobstr")
+renv::install("waldo")
+renv::install("purrr")
+renv::install("sloop")
+library(lobstr)
+library(waldo)
+library(purrr)
+library(sloop)
+```
+
+# Choices
+
+## Q1
+
+:::: {.callout-note collapse='false'}
+
+#### Q:1
+
+::: {style='font-size: 1.10em;'}
+
+***What type of vector does each of the following calls to `ifelse()` return?***
+
+::: 
+
+```{r}
+#| code-fold: false
+ifelse(TRUE, 1, "no")
+ifelse(FALSE, 1, "no")
+ifelse(NA, 1, "no")
+```
+
+
+::::
+
+:::: {.callout-tip collapse='false'}
+
+#### A1 
+
+::: {style='font-size: 1.10em;'}
+*`ifelse()` is strict when it comes to the `type` (or `mode`) in the results of `tests`, because it returns a "value with the same shape as test"*
+:::
+
+```{r}
+ifelse(test = TRUE, yes = 1, no = "no")
+mode(TRUE)
+```
+
+This is essentially saying the test result is `FALSE`, so it evaluates to 'no'
+
+````{r}
+# the 'shape' of the test here is FALSE, so 'no' is returned 
+ifelse(FALSE, 1, "no")
+```
+
+I can confirm this with `isFALSE(FALSE)`:
+
+```{r}
+# no = return values for false elements of test
+ifelse(test = isFALSE(FALSE), yes = 1, no = "no")
+```
+
+"*Missing values in test give missing values in the result.*"
+
+```{r}
+# the 'shape' of this test is missing, so it returns missing
+ifelse(test = NA, 1, "no")
+# but this will work!
+ifelse(test = is.na(NA), 1, "no")
+```
+
+
+::::
+
+## Q2
+
+:::: {.callout-note collapse='false'}
+
+#### Q:2
+
+::: {style='font-size: 1.10em;'}
+
+***Why does the following code work?***
+
+::: 
+
+```{r}
+#| code-fold: false
+#| eval: false
+x <- 1:10
+if (length(x)) "not empty" else "empty"
+
+x <- numeric()
+if (length(x)) "not empty" else "empty"
+```
+
+::::
+
+
+:::: {.callout-tip collapse='false'}
+
+#### A2
+
+::: {style='font-size: 1.10em;'}
+
+*I've rewritten this to make the conditions a little easier to see*
+
+```{r}
+#| code-fold: false
+x <- 1:10
+if (length(x)) {
+  "not empty" 
+  } else {
+  "empty" 
+  }
+```
+
+```{r}
+#| code-fold: false
+x <- numeric()
+if (length(x)) {
+  "not empty" 
+  } else {
+  "empty"
+  }
+```
+
+*The answer can be found by passing both statements to `length(x) == 0`, because at bottom, this is what logical statements contain: *
+
+```{r}
+sum(TRUE)
+sum(FALSE)
+```
+
+```{r}
+x <- 1:10
+length(x) == 0
+```
+
+```{r}
+x <- numeric()
+length(x) == 0
+```
+
+*So if the length of an empty numeric vector equals `0`, it's not empty*
+
+::: 
+
+::::
+
+# Loops
+
+## Q1
+
+:::: {.callout-note collapse='false'}
+
+#### Q:1
+
+::: {style='font-size: 1.10em;'}
+
+***Why does this code succeed without errors or warnings?***
+
+```{r}
+#| code-fold: false 
+#| eval: true
+x <- numeric()
+out <- vector("list", length(x))
+for (i in 1:length(x)) {
+  out[i] <- x[i]^2
+}
+out
+```
+
+::: 
+
+::::
+
+## Q2
+
+:::: {.callout-note collapse='false'}
+
+#### Q:2
+
+::: {style='font-size: 1.10em;'}
+
+***When the following code is evaluated, what can you say about the vector being iterated?***
+
+```{r}
+#| code-fold: false 
+#| eval: true
+xs <- c(1, 2, 3)
+for (x in xs) {
+  xs <- c(xs, x * 2)
+}
+xs
+```
+
+::: 
+
+::::
+
+## Q3
+
+:::: {.callout-note collapse='false'}
+
+#### Q:3
+
+::: {style='font-size: 1.10em;'}
+
+*What does the following code tell you about when the index is updated?*
+
+::: 
+
+::::

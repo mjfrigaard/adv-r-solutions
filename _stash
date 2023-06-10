@@ -1,3 +1,5 @@
+git remote set-url origin git@github.com:mjfrigaard/sm-advr2.git
+
 index.qmd
 foundations.qmd
 names-values.qmd

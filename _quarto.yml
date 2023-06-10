@@ -2,7 +2,7 @@ project:
   type: book
 
 book:
-  title: "Advanced R (2ed): field manual"
+  title: "Advanced R (2ed): solutions manual"
   author: "Martin Frigaard"
   date: "6/9/2023"
   chapters:
@@ -43,20 +43,23 @@ book:
       - perf-improve.qmd
       - rcpp.qmd
 
+link-external-newwindow: true
+
 format:
   html:
     theme: cosmo
-    callout-appearance: minimal
+    callout-appearance: default
     callout-icon: false
-    code-fold: show
-    code-summary: 'show code'
-  
-execute:
-  echo: true
-  collapse: true
-    
+    code-fold: true
+    code-summary: 'show'
   pdf:
     documentclass: scrreprt
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#" 
+    echo: true
+
 
 
 
