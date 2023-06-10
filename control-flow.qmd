@@ -30,15 +30,12 @@ library(sloop)
 
 ## Q1
 
-:::: {.callout-note collapse='false'}
-
+:::: {.callout-note collapse="false"}
 #### Q:1
 
-::: {style='font-size: 1.10em;'}
-
+::: {style="font-size: 1.10em;"}
 ***What type of vector does each of the following calls to `ifelse()` return?***
-
-::: 
+:::
 
 ```{r}
 #| code-fold: false
@@ -46,15 +43,12 @@ ifelse(TRUE, 1, "no")
 ifelse(FALSE, 1, "no")
 ifelse(NA, 1, "no")
 ```
-
-
 ::::
 
-:::: {.callout-tip collapse='false'}
+:::: {.callout-tip collapse="false"}
+#### A1
 
-#### A1 
-
-::: {style='font-size: 1.10em;'}
+::: {style="font-size: 1.10em;"}
 *`ifelse()` is strict when it comes to the `type` (or `mode`) in the results of `tests`, because it returns a "value with the same shape as test"*
 :::
 
@@ -65,7 +59,7 @@ mode(TRUE)
 
 This is essentially saying the test result is `FALSE`, so it evaluates to 'no'
 
-````{r}
+```{r}
 # the 'shape' of the test here is FALSE, so 'no' is returned 
 ifelse(FALSE, 1, "no")
 ```
@@ -77,7 +71,7 @@ I can confirm this with `isFALSE(FALSE)`:
 ifelse(test = isFALSE(FALSE), yes = 1, no = "no")
 ```
 
-"*Missing values in test give missing values in the result.*"
+"***Missing values in test give missing values in the result.**s*"
 
 ```{r}
 # the 'shape' of this test is missing, so it returns missing
@@ -85,21 +79,16 @@ ifelse(test = NA, 1, "no")
 # but this will work!
 ifelse(test = is.na(NA), 1, "no")
 ```
-
-
 ::::
 
 ## Q2
 
-:::: {.callout-note collapse='false'}
-
+:::: {.callout-note collapse="false"}
 #### Q:2
 
-::: {style='font-size: 1.10em;'}
-
+::: {style="font-size: 1.10em;"}
 ***Why does the following code work?***
-
-::: 
+:::
 
 ```{r}
 #| code-fold: false
@@ -110,16 +99,12 @@ if (length(x)) "not empty" else "empty"
 x <- numeric()
 if (length(x)) "not empty" else "empty"
 ```
-
 ::::
 
-
-:::: {.callout-tip collapse='false'}
-
+:::: {.callout-tip collapse="false"}
 #### A2
 
-::: {style='font-size: 1.10em;'}
-
+::: {style="font-size: 1.10em;"}
 *I've rewritten this to make the conditions a little easier to see*
 
 ```{r}
@@ -142,7 +127,7 @@ if (length(x)) {
   }
 ```
 
-*The answer can be found by passing both statements to `length(x) == 0`, because at bottom, this is what logical statements contain: *
+*The answer can be found by passing both statements to `length(x) == 0`, because at bottom, this is what logical statements contain:*
 
 ```{r}
 sum(TRUE)
@@ -160,21 +145,17 @@ length(x) == 0
 ```
 
 *So if the length of an empty numeric vector equals `0`, it's not empty*
-
-::: 
-
+:::
 ::::
 
 # Loops
 
 ## Q1
 
-:::: {.callout-note collapse='false'}
-
+:::: {.callout-note collapse="false"}
 #### Q:1
 
-::: {style='font-size: 1.10em;'}
-
+::: {style="font-size: 1.10em;"}
 ***Why does this code succeed without errors or warnings?***
 
 ```{r}
@@ -187,19 +168,86 @@ for (i in 1:length(x)) {
 }
 out
 ```
+:::
+::::
 
-::: 
+:::: {.callout-tip collapse="false"}
+#### A1
 
+::: {style="font-size: 1.10em;"}
+*The answer is explained by the objects going into the loop:*
+
+```{r}
+#| code-fold: false
+x <- numeric()
+out <- vector("list", length(x))
+x
+out
+```
+
+*Both of these are empty, and if we check what the index `i` is going to be doing inside the `for` loop, we see the following:*
+
+-   *When we square the element at an empty numeric vector (i.e, `x[0]`), we see it's identical to the empty vector*
+
+    ```{r}
+    #| code-fold: false
+    x[0]^2
+    ```
+
+-   *And if we check \``1:length(x)` we see the following:*
+
+    ```{r}
+    #| code-fold: false
+    1:length(x)
+    ```
+
+-   *This means we'll have two iterations in the `for` loop. At position `[0]`, `out` is an empty `list()`*
+
+    ```{r}
+    #| code-fold: false
+    out[0]
+    ```
+
+-   *And `x[0]^2` is `numeric(0)`*
+
+    ```{r}
+    #| code-fold: false
+    x[0]^2
+    ```
+
+-   *So if we assign `numeric(0)` to an empty `list()` we get...*
+
+    ```{r}
+    #| code-fold: false
+    out[0] <- x[0]^2
+    out
+    ```
+
+-   *We get the same empty `list()`, and at position `x[1]`, it's still missing (`NA`):*
+
+    ```{r}
+    #| code-fold: false
+    x[1]^2
+    ```
+
+-   *So if we view a couple of iterations, we see why `out` is `NA`*:
+
+    ```{r}
+    #| code-fold: false
+    out[0] <- x[0]^2
+    out
+    out[1] <- x[1]^2
+    out
+    ```
+:::
 ::::
 
 ## Q2
 
-:::: {.callout-note collapse='false'}
-
+:::: {.callout-note collapse="false"}
 #### Q:2
 
-::: {style='font-size: 1.10em;'}
-
+::: {style="font-size: 1.10em;"}
 ***When the following code is evaluated, what can you say about the vector being iterated?***
 
 ```{r}
@@ -211,21 +259,61 @@ for (x in xs) {
 }
 xs
 ```
+:::
 
-::: 
+::::
+
+:::: {.callout-tip collapse="false"}
+
+#### A2
+
+::: {style="font-size: 1.10em;"}
+*The vector being iterated (`xs`) has three elements (`1,2,3`) and its placement inside `c()` means each element is multiplied by `2` in the loop (adding one new element to `xs`* at each iteration).
+
+```{r}
+#| code-fold: false
+xs <- c(1, 2, 3)
+# iteration 1
+x <- 1 * 2
+xs[4] <- x
+xs
+```
+
+```{r}
+#| code-fold: false
+# iteration 2
+x <- 2 * 2
+xs[5] <- x
+xs
+```
+
+```{r}
+#| code-fold: false
+# iteration 3
+x <- 3 * 2
+xs[6] <- x
+xs
+```
+
+:::
 
 ::::
 
 ## Q3
 
-:::: {.callout-note collapse='false'}
-
+::: {.callout-note collapse="false"}
 #### Q:3
 
-::: {style='font-size: 1.10em;'}
+::: {style="font-size: 1.10em;"}
+***What does the following code tell you about when the index is updated?***
 
-*What does the following code tell you about when the index is updated?*
-
-::: 
-
-::::
+```{r}
+#| code-fold: false 
+#| eval: true
+for (i in 1:3) {
+  i <- i * 2
+  print(i) 
+}
+```
+:::
+:::

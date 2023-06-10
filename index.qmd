@@ -7,7 +7,7 @@
 source("common.R")
 ```
 
-This is yet *another* version of the solutions to [Advanced R, 2nd edition](https://adv-r.hadley.nz/) (`advR2`). I've returned to `advR2` more than any other for my day-to-day activities as an R developer. After working through each of the exercises, then reading how others had solved them, I decided some the approaches I took to solving the exercises differed enough to warrant putting them into a book. 
+This is yet *another* version of the solutions to [Advanced R, 2nd edition](https://adv-r.hadley.nz/) (`advR2`). I've returned to `advR2` more than any other resource for my day-to-day activities as an R developer. After working through each of the exercises, then reading how others had solved them, I decided some the approaches I took to solving the exercises differed enough to warrant putting them into a book. 
 
 I highly recommend the [Advanced R Solutions](https://advanced-r-solutions.rbind.io/) by Malte Grosser, Henning Bumann, and Hadley Wickham. I'll refer to these solutions in the following callout box:
 
@@ -27,7 +27,9 @@ Indrajeet Patil also has a [solutions manual](https://bookdown.org/IndrajeetPati
 
 ## Helper functions
 
-While reading `advR2`, I decided to write a few helper functions for returning various characteristics of R objects: 
+After reading the [functions chapter of `advR2`](https://adv-r.hadley.nz/functions.html), I wrote some helper functions for various chapters: 
+
+## Object info
 
 1. `obj_info()` combines base functions for `class()`, `typeof()`, `attributes()` along with functions from `lobstr` and `sloop`.
 
@@ -62,3 +64,4 @@ While reading `advR2`, I decided to write a few helper functions for returning v
     ```
 
 
+These helper functions are stored in the `common.R` script. 
